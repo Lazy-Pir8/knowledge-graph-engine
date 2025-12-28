@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+    <h1> User Dashboard</h1>
+    <p>Welcome {{request.user.first_name}}!</p>
+
+    <ul>
+        <li>Username: {{request.user.username}}</li>
+        <li>Email: {{request.user.email}}</li>
+        <li>
+            <a href="{% url 'knowledge:index' %}">Knowledge Graph</a></li>
+        </li> 
+    </ul>
+</body>
+</html>

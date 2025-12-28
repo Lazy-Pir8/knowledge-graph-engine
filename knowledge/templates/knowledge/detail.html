@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name.lower }}</title>
+    <link rel="stylesheet" href="{% static 'knowledge/styles.css' %}">
+</head>
+<body>
+    <h1>{{ topic.name }}</h1>
+    <p>{{ topic.description }}</p>
+
+    <form action="{% url 'knowledge:delete_topic' slug=topic.slug %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Delete Topic</button>
+    </form>
+
+</body>
+</html>
