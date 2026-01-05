@@ -5,10 +5,13 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CreateUserForm 
 from django.contrib.auth.decorators import login_required
-from users.decorators import unaunthenticated_user
+from users.decorators import unaunthenticated_user, allowed_users
+from django.contrib.auth.models import Group
 
 # Create your views here.
+
 @login_required(login_url='users:login')
+@allowed_users(allowed_roles=['Admin', 'Editor'])
 def index(request):
     return render(request, 'users/user.html')
 
@@ -17,11 +20,17 @@ def register(request):
     
     form = CreateUserForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        user = form.save() 
+
+        group = Group.objects.get(name="Editor")
+        user.groups.add(group)
+
+        user.save()
 
     return render(request, 'users/register.html', {
         "form": form
     })
+
 
 @unaunthenticated_user
 def login_view(request): 

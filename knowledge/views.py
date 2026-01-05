@@ -5,8 +5,8 @@ from django.shortcuts import render, get_object_or_404
 from .forms import TopicForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-
-
+from users.decorators import allowed_users
+from django.contrib.auth.decorators import user_passes_test
 # Create your views here.
 def index(request):
     # I don't know currently but later make index page to show list of knowledge items
@@ -19,16 +19,28 @@ def index(request):
 def detail(request, slug):
     topic = get_object_or_404(Topic, slug=slug)
 
+    related_topics = Topic.objects.filter(tag = topic.tag).exclude(id=topic.id).order_by('-created_at')[:5]
+
     return render(request, 'knowledge/detail.html', { 
         "topic": topic,
+        "related_topics":related_topics,
     })
 
+def is_editor(user):
+    return user.groups.filter(name__in=['Editor']).exists()
+
+
+@allowed_users(allowed_roles=['Admin', 'Editor'])
 def add_topic(request):
     if request.method == "POST":
         form = TopicForm(request.POST)
         if form.is_valid():
-            form.save()
+
+            topic = form.save(commit=False)
+            topic.owner = request.user
+            topic.save()
             return redirect('knowledge:index')
+        
     else:
         form = TopicForm()
     
@@ -36,16 +48,37 @@ def add_topic(request):
         'form': form
     })
 
+def edit_topic(request, slug):
+    topic = get_object_or_404(Topic, slug=slug)
+    
+    print("Topic Found:", topic)
+
+    if request.user != topic.owner and not request.user.groups.filter(name='Admin').exists():
+        raise Http404("You do not have permission to edit this topic.")
+    
+    if request.method == "POST":
+        form = TopicForm(request.POST or None, instance=topic)
+        if form.is_valid():
+            form.save()
+
+            return redirect('knowledge:detail', slug=topic.slug,)
+        
+        return render(request, 'knowledge/edit_topic.html', {
+            'form': form,
+            'topic': topic
+        })
+
+@allowed_users(allowed_roles=['Admin', 'Editor', 'User'])
 def delete_topic(request, slug):
     topic = get_object_or_404(Topic, slug=slug)
+    if request.user != topic.owner and not request.user.groups.filter(name='Admin').exists():
+        raise Http404("You do not have permission to delete this topic.")
     if request.method == "POST":
         topic.delete()
         return redirect("knowledge:index")
     else:
         raise Http404("Topic does not exist")
     
-
-
 """
 def detail(request, name):
     name = name.lower()
@@ -56,8 +89,8 @@ def detail(request, name):
 
     return render(request, 'knowledge/detail.html',{
         "name": data["name"].capitalize(),
-        "description": data["description"]
-        
+        "description": data["description"]   
+         
     })
 """
 

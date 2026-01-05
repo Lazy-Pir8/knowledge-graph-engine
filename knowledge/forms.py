@@ -5,4 +5,4 @@ from .models import Topic
 class TopicForm(ModelForm):
     class Meta:
         model = Topic
-        fields = ["name", "description", "slug"]
+        fields = ["name", "description"]
