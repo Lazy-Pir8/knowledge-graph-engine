@@ -1,1 +1,1 @@
-web: gunicorn knowledge-graph-engine.wsgi:application
+web: gunicorn config.wsgi:application
