@@ -11,11 +11,6 @@
     <h1>{{ topic.name }}</h1>
     <p>{{ topic.description }}</p>
     <h3>Related Topics: </h3>
-    {% for topic in related_topics %}
-        <h3>
-            <a href="{% url 'knowledge:detail' slug=topic.slug %}">{{topic.name}}</a>
-        </h3>
-    {% endfor %}
     {% if request.user == topic.owner or request.user.is_superuser %}
         <form action="{% url 'knowledge:delete_topic' slug=topic.slug %}" method="post">
             {% csrf_token %}

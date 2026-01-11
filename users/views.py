@@ -18,7 +18,7 @@ def index(request):
 @unaunthenticated_user
 def register(request):
     
-    form = CreateUserForm(request.POST or None)
+    form = CreateUserForm(request.POST)
     if form.is_valid():
         user = form.save() 
 
@@ -26,6 +26,7 @@ def register(request):
         user.groups.add(group)
 
         user.save()
+        return HttpResponseRedirect(reverse("users:index"))
 
     return render(request, 'users/register.html', {
         "form": form
@@ -47,7 +48,7 @@ def login_view(request):
                 "message": "Invalid Credentials"
             })
 
-    return render(request, 'users/login.html', {
+    return render(request, 'users/login.html', { 
     })
 
 def logout_view(request):

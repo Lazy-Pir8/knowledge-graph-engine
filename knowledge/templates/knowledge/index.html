@@ -18,5 +18,14 @@
             </li>
         {% endfor %}
     </ul>
+
+    
+    <form action="{% url 'knowledge:add_topic' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">
+            Add Topic</form>
+        </button>
+    </form>
+    
 </body>
 </html>

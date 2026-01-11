@@ -19,11 +19,8 @@ def index(request):
 def detail(request, slug):
     topic = get_object_or_404(Topic, slug=slug)
 
-    related_topics = Topic.objects.filter(tag = topic.tag).exclude(id=topic.id).order_by('-created_at')[:5]
-
     return render(request, 'knowledge/detail.html', { 
         "topic": topic,
-        "related_topics":related_topics,
     })
 
 def is_editor(user):
