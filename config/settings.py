@@ -26,6 +26,11 @@ CSRF_TRUSTED_ORIGINS = [
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+print("DB ENGINE:", DATABASES["default"]["ENGINE"])
+
 
 ALLOWED_HOSTS = [
     "knowledge-graph-engine-production.up.railway.app",
