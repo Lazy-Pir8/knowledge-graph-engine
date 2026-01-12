@@ -12,6 +12,27 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
+import os
+import dj_database_url
+
+DATABASES = {
+    "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+}
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://knowledge-graph-engine-production.up.railway.app",
+]
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+
+ALLOWED_HOSTS = [
+    "knowledge-graph-engine-production.up.railway.app",
+]
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,8 +45,6 @@ SECRET_KEY = 'django-insecure-&aj=z*rn6gbt)d4i-vrhe4nr%n5#jdlv3%uorgl()h(izssa^i
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
