@@ -4,25 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ name.lower }}</title>
-    <link rel="stylesheet" href="{% static 'knowledge/styles.css' %}">
+    <title>{{ topic.name }}</title>
+    <link rel="stylesheet" href=" {% static 'knowledge/styles.css' %} ">
 </head>
 <body>
-    <h1>{{ topic.name }}</h1>
-    <p>{{ topic.description }}</p>
-    <h3>Related Topics: </h3>
-    {% if request.user == topic.owner or request.user.is_superuser %}
-        <form action="{% url 'knowledge:delete_topic' slug=topic.slug %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Delete Topic</button>
-        </form>
 
-        <form action="{% url 'knowledge:edit_topic' slug=topic.slug %}" method ="post">
-            {% csrf_token %}
-            <button type="submit">Edit Topic</button>
-        </form> 
-    {% endif %}
+    <div class="container">
 
-    <h2>Created By: {{ topic.owner }}</h2>
+        <a href="{% url 'knowledge:index' %}" class="back-link">
+            ← Back to Index
+        </a>
+
+        <article class="topic-detail">
+            <h1 class="topic-title">{{ topic.name }}</h1>
+
+            <p class="topic-description">
+                {{ topic.description|default:"No description yet. This topic is still under construction." }}
+            </p>
+
+            <div class="meta">
+                <span>Created by <strong>{{ topic.owner }}</strong></span>
+            </div>
+        </article>
+
+        <section class="related">
+            <h3>Related Topics</h3>
+            <p class="muted">Coming soon — graph connections </p>
+        </section>
+
+        {% if request.user == topic.owner or request.user.is_superuser %}
+        <section class="admin-actions">
+            <form action="{% url 'knowledge:edit_topic' slug=topic.slug %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn edit">Edit Topic</button>
+            </form>
+
+            <form action="{% url 'knowledge:delete_topic' slug=topic.slug %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn delete">Delete Topic</button>
+            </form>
+        </section>
+        {% endif %}
+
+    </div>
+
 </body>
 </html>

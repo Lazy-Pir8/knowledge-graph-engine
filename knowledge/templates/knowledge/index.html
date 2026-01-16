@@ -4,28 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
-    <link rel="stylesheet" href="{% static 'knowledge/styles.css' %}">
+    <title>WikiGraph Engine</title>
+    <link rel="stylesheet" href="{% static 'knowledge/styles_index.css' %}">
 </head>
 <body>
-    <p>Welcome to the Knowledge Graph Engine!</p>
 
-    <h2>Available Knowledge Topics:</h2>
-    <ul>
-        {% for item in items %}
-            <li>
-                <a href="{% url 'knowledge:detail' item.slug %}">{{item.name|capfirst}}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <header class="header">
+            <h1>WikiGraph Engine</h1>
+            <p class="subtitle">
+                Explore interconnected topics. Click a topic to dive deeper.
+            </p>
+        </header>
 
-    
-    <form action="{% url 'knowledge:add_topic' %}" method="post">
-        {% csrf_token %}
-        <button type="submit">
-            Add Topic</form>
-        </button>
-    </form>
-    
+        <section class="topics">
+            <h2>Topic Index</h2>
+
+            <div class="topic-grid">
+                {% for item in items %}
+                    <a href="{% url 'knowledge:detail' item.slug %}" class="topic-card">
+                        {{ item.name|capfirst }}
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="actions">
+            <form action="{% url 'knowledge:add_topic' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="add-btn">
+                    + Add Topic
+                </button>
+            </form>
+        </section>
+    </div>
+
 </body>
 </html>

@@ -1,26 +1,208 @@
-h1{
-    font-size: 2.5em;
-    color: #333333;
-    margin-bottom: 0.5em;
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-p{
-    font-size: 1.2em;
-    line-height: 1.6;
-    color: #666666;
-    margin-bottom: 1em;
+:root {
+    --bg-main: #020617;
+    --bg-card: #020617;
+    --border: #1e293b;
+    --text-main: #e5e7eb;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --danger: #ef4444;
+    --success: #22c55e;
 }
 
-h2{
-    font-size: 2em;
-    color: #444444;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #020617, #020617);
+    color: var(--text-main);
+    min-height: 100vh;
 }
 
-a{    list-style-type: disc;
-    list-style-type: disc;
-    margin-left: 20px;
-    color: #cb3f3f;
+/* ===============================
+   LAYOUT
+   =============================== */
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 3rem 1.5rem;
 }
 
+/* ===============================
+   TYPOGRAPHY
+   =============================== */
+h1, h2, h3 {
+    letter-spacing: -0.5px;
+}
+
+h1 {
+    font-size: 2.6rem;
+    margin-bottom: 0.8rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+}
+
+h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #cbd5f5;
+}
+
+.muted {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+/* ===============================
+   LINKS
+   =============================== */
+a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ===============================
+   HEADER
+   =============================== */
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.subtitle {
+    margin-top: 0.6rem;
+    color: var(--text-muted);
+}
+
+/* ===============================
+   TOPIC GRID (INDEX PAGE)
+   =============================== */
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.2rem;
+}
+
+.topic-card {
+    padding: 1.4rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.25s ease;
+}
+
+.topic-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(56, 189, 248, 0.15);
+    color: var(--accent);
+}
+
+/* ===============================
+   DETAIL PAGE
+   =============================== */
+.back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.topic-detail {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.topic-title {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+}
+
+.topic-description {
+    margin-bottom: 1.5rem;
+}
+
+.meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* ===============================
+   RELATED SECTION
+   =============================== */
+.related {
+    margin-bottom: 2.5rem;
+}
+
+/* ===============================
+   ADMIN ACTIONS
+   =============================== */
+.admin-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+.btn {
+    padding: 0.75rem 1.6rem;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn.edit {
+    background: var(--success);
+    color: #052e16;
+}
+
+.btn.edit:hover {
+    background: #16a34a;
+}
+
+.btn.delete {
+    background: var(--danger);
+    color: #450a0a;
+}
+
+.btn.delete:hover {
+    background: #dc2626;
+}
+
+/* ===============================
+   ADD TOPIC BUTTON (INDEX)
+   =============================== */
+.actions {
+    margin-top: 3rem;
+    text-align: center;
+}

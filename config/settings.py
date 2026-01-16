@@ -13,27 +13,26 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 
 import os
-import dj_database_url
+
 
 DATABASES = {
-    "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':'db.sqlite3',
+    }
 }
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://knowledge-graph-engine-production.up.railway.app",
-]
+
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
 
 print("DB ENGINE:", DATABASES["default"]["ENGINE"])
 
 
 ALLOWED_HOSTS = [
-    "knowledge-graph-engine-production.up.railway.app",
+    "*"
 ]
 
 
@@ -50,9 +49,6 @@ SECRET_KEY = 'django-insecure-&aj=z*rn6gbt)d4i-vrhe4nr%n5#jdlv3%uorgl()h(izssa^i
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
 
 
 
@@ -148,4 +144,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
