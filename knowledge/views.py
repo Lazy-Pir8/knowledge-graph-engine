@@ -7,14 +7,36 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from users.decorators import allowed_users
 from django.contrib.auth.decorators import user_passes_test
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from .serializers import TopicSerializers
+from rest_framework.response import Response
+
+
+class HelloView(APIView):
+    permission_classes = (IsAuthenticated, )
+
+    def get(self, request):
+        content = {'message': 'Hello, World'}
+        return Response(content)
+
 # Create your views here.
+class index(APIView):
+     # permission_classes = (IsAuthenticated, )
+    def get(self, request):
+    # I don't know currently but later make index page to show list of knowledge items
+        items = Topic.objects.all()
+        serializer = TopicSerializers(items, many=True)
+        return Response(serializer.data)
+"""
 def index(request):
     # I don't know currently but later make index page to show list of knowledge items
     items = Topic.objects.all()
     return render(request, 'knowledge/index.html', {
         "items": items
     })
-
+"""
 @login_required(login_url='users:login')
 def detail(request, slug):
     topic = get_object_or_404(Topic, slug=slug)
