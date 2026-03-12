@@ -61,6 +61,8 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES' : [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # if user is in a authenticated session, allow it to pass JWTAuth.
+        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 
@@ -150,8 +152,8 @@ USE_TZ = True
 
 # whatever I am adding manually in this file
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
-
+# ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "127.0.0.1").split(",")
+ALLOWED_HOSTS = ["*"]
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR / 'staticfiles')
 

@@ -10,8 +10,8 @@ urlpatterns = [
     path('add_topic/', views.add_topic, name='add_topic'),
     path('edit_topic/<slug:slug>/', views.edit_topic, name='edit_topic'),
     path('<slug:slug>/', views.detail, name='detail'),
-    path('', views.index.as_view(), name='index'),
-    
+    # path('', views.index.as_view(), name='index'),
+    path('', views.index, name='index')
     
 ]
 

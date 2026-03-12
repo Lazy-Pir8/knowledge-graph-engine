@@ -22,6 +22,7 @@ class HelloView(APIView):
         return Response(content)
 
 # Create your views here.
+"""
 class index(APIView):
      # permission_classes = (IsAuthenticated, )
     def get(self, request):
@@ -30,13 +31,15 @@ class index(APIView):
         serializer = TopicSerializers(items, many=True)
         return Response(serializer.data)
 """
+
 def index(request):
     # I don't know currently but later make index page to show list of knowledge items
     items = Topic.objects.all()
     return render(request, 'knowledge/index.html', {
         "items": items
     })
-"""
+
+    
 @login_required(login_url='users:login')
 def detail(request, slug):
     topic = get_object_or_404(Topic, slug=slug)
@@ -70,7 +73,7 @@ def add_topic(request):
 def edit_topic(request, slug):
     topic = get_object_or_404(Topic, slug=slug)
     
-    print("Topic Found:", topic)
+  
 
     if request.user != topic.owner and not request.user.groups.filter(name='Admin').exists():
         raise Http404("You do not have permission to edit this topic.")
@@ -81,6 +84,8 @@ def edit_topic(request, slug):
             form.save()
 
             return redirect('knowledge:detail', slug=topic.slug,)
+    else:
+        form = TopicForm(instance=topic)
         
         return render(request, 'knowledge/edit_topic.html', {
             'form': form,

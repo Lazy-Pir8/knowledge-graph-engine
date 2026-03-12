@@ -13,3 +13,4 @@ class TopicAdmin(admin.ModelAdmin):
         return ' '.join(words[:50]) + ('...' if len(words) > 50 else '')
 
     short_description.short_description = 'Description'
+
