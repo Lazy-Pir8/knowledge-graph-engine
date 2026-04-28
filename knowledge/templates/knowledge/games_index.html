@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games</title>
+    <link rel="stylesheet" href="{% static 'knowledge/styles_index.css' %}">
+</head>
+<body>
+
+    <div class="container">
+        <header class="header">
+            <h1>Games</h1>
+            <p class="subtitle">
+                Explore interconnected topics. Click a topic to dive deeper.
+            </p>
+        </header>
+
+        <section class="topics">
+            <h2>Game Index</h2>
+
+            <div class="topic-grid">
+                {% for item in items %}
+                    <a href="{% url 'knowledge:game_detail' item.slug %}" class="topic-card">
+                        {{ item.name|capfirst }}
+                    </a>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="actions">
+            <form action="{% url 'knowledge:add_topic' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="add-btn">
+                    + Add Topic
+                </button>
+            </form>
+        </section>
+    </div>
+
+</body>
+</html>

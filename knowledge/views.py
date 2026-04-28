@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
-from knowledge.models import Topic
+from knowledge.models import Topic, Games
 from django.shortcuts import render, get_object_or_404
 from .forms import TopicForm
 from django.contrib.auth.forms import UserCreationForm
@@ -33,19 +33,35 @@ class index(APIView):
 """
 
 def index(request):
+    return render(request, "knowledge/index.html")
+
+def weapons_index(request):
     # I don't know currently but later make index page to show list of knowledge items
     items = Topic.objects.all()
     return render(request, 'knowledge/index.html', {
         "items": items
     })
 
+def games_index(request):
+    # I don't know currently but later make index page to show list of knowledge items
+    items = Games.objects.all()
+    return render(request, 'knowledge/games_index.html', {
+        "items": items
+    })
+
+def game_detail(request, slug):
+    game = get_object_or_404(Games, slug=slug)
+
+    return render(request, 'knowledge/game_detail.html', { 
+        "game": game,
+    })
     
 @login_required(login_url='users:login')
 def detail(request, slug):
-    topic = get_object_or_404(Topic, slug=slug)
+    weapon = get_object_or_404(Topic, slug=slug)
 
-    return render(request, 'knowledge/detail.html', { 
-        "topic": topic,
+    return render(request, 'knowledge/weapon_detail.html', { 
+        "weapon": weapon,
     })
 
 def is_editor(user):
@@ -53,99 +69,105 @@ def is_editor(user):
 
 
 @allowed_users(allowed_roles=['Admin', 'Editor'])
-def add_topic(request):
+def add_weapon(request):
     if request.method == "POST":
-        form = TopicForm(request.POST)
+        form = WeaponsForm(request.POST)
         if form.is_valid():
 
-            topic = form.save(commit=False)
-            topic.owner = request.user
-            topic.save()
+            weapon = form.save(commit=False)
+            weapon.owner = request.user
+            weapon.save()
             return redirect('knowledge:index')
         
     else:
-        form = TopicForm()
+        form = WeaponsForm()
     
-    return render(request, 'knowledge/add_topic.html', {
+    return render(request, 'knowledge/add_weapon.html', {
+        'form': form
+    })
+@allowed_users(allowed_roles=['Admin', 'Editor'])
+def add_game(request):
+    if request.method == "POST":
+        form = GamesForm(request.POST)
+        if form.is_valid():
+
+            game = form.save(commit=False)
+            game.owner = request.user
+            game.save()
+            return redirect('knowledge:index')
+        
+    else:
+        form = GamesForm()
+    
+    return render(request, 'knowledge/add_game.html', {
         'form': form
     })
 
-def edit_topic(request, slug):
-    topic = get_object_or_404(Topic, slug=slug)
+def edit_weapon(request, slug):
+    weapon = get_object_or_404(Topic, slug=slug)
     
   
 
-    if request.user != topic.owner and not request.user.groups.filter(name='Admin').exists():
+    if request.user != weapon.owner and not request.user.groups.filter(name='Admin').exists():
         raise Http404("You do not have permission to edit this topic.")
     
     if request.method == "POST":
-        form = TopicForm(request.POST or None, instance=topic)
+        form = WeaponsForm(request.POST or None, instance=weapon)
         if form.is_valid():
             form.save()
 
-            return redirect('knowledge:detail', slug=topic.slug,)
+            return redirect('knowledge:detail', slug=weapon.slug,)
     else:
-        form = TopicForm(instance=topic)
+        form = WeaponsForm(instance=weapon)
         
-        return render(request, 'knowledge/edit_topic.html', {
+        return render(request, 'knowledge/edit_weapon.html', {
             'form': form,
-            'topic': topic
+            'weapon': weapon
         })
 
-@allowed_users(allowed_roles=['Admin', 'Editor', 'User'])
-def delete_topic(request, slug):
-    topic = get_object_or_404(Topic, slug=slug)
-    if request.user != topic.owner and not request.user.groups.filter(name='Admin').exists():
-        raise Http404("You do not have permission to delete this topic.")
+def edit_game(request, slug):
+    game = get_object_or_404(Games, slug=slug)
+    
+  
+
+    if request.user != game.owner and not request.user.groups.filter(name='Admin').exists():
+        raise Http404("You do not have permission to edit this topic.")
+    
     if request.method == "POST":
-        topic.delete()
+        form = GamesForm(request.POST or None, instance=game)
+        if form.is_valid():
+            form.save()
+
+            return redirect('knowledge:detail', slug=game.slug,)
+    else:
+        form = GamesForm(instance=game)
+        
+        return render(request, 'knowledge/edit_game.html', {
+            'form': form,
+            'game': game
+        })
+
+
+@allowed_users(allowed_roles=['Admin', 'Editor', 'User'])
+def delete_weapon(request, slug):
+    weapon = get_object_or_404(Weapons, slug=slug)
+    if request.user != weapon.owner and not request.user.groups.filter(name='Admin').exists():
+        raise Http404("You do not have permission to delete this weapon.")
+    if request.method == "POST":
+        weapon.delete()
         return redirect("knowledge:index")
     else:
-        raise Http404("Topic does not exist")
-    
-"""
-def detail(request, name):
-    name = name.lower()
-    data = DATA_BY_NAME.get(name)
- 
-    if not data:
-        return HttpResponse("Not Found")
+        raise Http404("Weapon does not exist")
 
-    return render(request, 'knowledge/detail.html',{
-        "name": data["name"].capitalize(),
-        "description": data["description"]   
-         
-    })
-"""
 
-"""
-DATA_BY_ID = {
-    1: {"name": "Knowledge", "description": "Welcome to the Knowledge App!"},
-    2: {"name": "linux", "description": "Linux is an open-source operatiThis is the first dataset.ng system modelled on UNIX."},
-    3: {"name": "earth", "description": "Earth is the third planet from the Sun and the only astronomical object known to harbor life."},
-}
 
-DATA_BY_NAME = {
-    "knowledge": {"name": "Knowledge", "description": "Welcome to the Knowledge App!"},
-    "linux": {"name": "linux", "description": "Linux is an open-source operatiThis is the first dataset.ng system modelled on UNIX."},
-    "earth": {"name": "earth", "description": "Earth is the third planet from the Sun and the only astronomical object known to harbor life."},
-}
-"""
-'''
-def knowledge_detail(request, id):    
-    data = DATA_BY_ID.get(id)
-
-    if not data:
-        return HttpResponse("Not Found")
-    return HttpResponse(data["description"])
-'''
-"""
-def knowledge_detail(request,name):
-    name = name.lower()
-     
-    data = DATA_BY_NAME.get(name)
-
-    if not data:
-        return HttpResponse("Not Found")
-    return HttpResponse(data["description"])
-"""
+@allowed_users(allowed_roles=['Admin', 'Editor', 'User'])
+def delete_game(request, slug):
+    game = get_object_or_404(Games, slug=slug)
+    if request.user != game.owner and not request.user.groups.filter(name='Admin').exists():
+        raise Http404("You do not have permission to delete this game.")
+    if request.method == "POST":
+        game.delete()
+        return redirect("knowledge:index")
+    else:
+        raise Http404("Game does not exist") 

@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ game.name }}</title>
+    <link rel="stylesheet" href=" {% static 'knowledge/styles.css' %} ">
+</head>
+<body>
+
+    <div class="container">
+
+        <a href="{% url 'knowledge:index' %}" class="back-link">
+            ← Back to Index
+        </a>
+
+        <article class="topic-detail">
+            <h1 class="topic-title">{{ game.name }}</h1>
+
+            <p class="topic-description">
+                {{ game.description|default:"No description yet. This game is still under construction." }}
+            </p>
+
+            <div class="meta">
+                <span>Created by <strong>{{ game.owner }}</strong></span>
+            </div>
+        </article>
+
+        <section class="related">
+            <h3>Related Topics</h3>
+            <p class="muted">Coming soon — graph connections </p>
+        </section>
+
+        {% if request.user == game.owner or request.user.is_superuser %}
+        <section class="admin-actions">
+            <form action="{% url 'knowledge:edit_topic' slug=game.slug %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn edit">Edit Topic</button>
+            </form>
+
+            <form action="{% url 'knowledge:delete_topic' slug=game.slug %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn delete">Delete Topic</button>
+            </form>
+        </section>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
